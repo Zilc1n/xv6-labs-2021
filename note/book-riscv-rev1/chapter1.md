@@ -3,6 +3,30 @@
 
 xv6 操作系统通过一系列强大的**系统调用**，为用户程序提供了与内核交互的接口。理解这些接口是掌握 xv6 运作方式的关键。本章将深入探讨进程、内存、I/O 与文件描述符以及管道等核心概念。
 
+| 系统调用                                    | 描述                                            |
+| --------------------------------------- | --------------------------------------------- |
+| `int fork()`                            | 创建一个进程，返回子进程的 PID                             |
+| `int exit(int status)`                  | 终止当前进程，并将状态报告给 `wait()` 函数。无返回                |
+| `int wait(int *status)`                 | 等待一个子进程退出；将退出状态存入 `*status`；返回子进程 PID         |
+| `int kill(int pid)`                     | 终止对应 PID 的进程，返回 0，或返回 -1 表示错误                 |
+| `int getpid()`                          | 返回当前进程的 PID                                   |
+| `int sleep(int n)`                      | 暂停 n 个时钟节拍                                    |
+| `int exec(char *file, char *argv[])`    | 加载一个文件并使用参数执行它；只有在出错时才返回                      |
+| `char *sbrk(int n)`                     | 按 n 字节增长进程的内存。返回新内存的开始                        |
+| `int open(char *file, int flags)`       | 打开一个文件；`flags` 表示 read/write；返回一个 fd（文件描述符）   |
+| `int write(int fd, char *buf, int n)`   | 从 `buf` 写 n 个字节到文件描述符 `fd`；返回写入的字节数           |
+| `int read(int fd, char *buf, int n)`    | 将 n 个字节读入 `buf`；返回读取的字节数；如果文件结束，返回 0          |
+| `int close(int fd)`                     | 释放打开的文件 `fd`                                  |
+| `int dup(int fd)`                       | 返回一个新的文件描述符，指向与 `fd` 相同的文件                    |
+| `int pipe(int p[])`                     | 创建一个管道，把 read/write 文件描述符放在 `p[0]` 和 `p[1]` 中 |
+| `int chdir(char *dir)`                  | 改变当前的工作目录                                     |
+| `int mkdir(char *dir)`                  | 创建一个新目录                                       |
+| `int mknod(char *file, int, int)`       | 创建一个设备文件                                      |
+| `int fstat(int fd, struct stat *st)`    | 将打开文件 `fd` 的信息放入 `*st`                        |
+| `int stat(char *file, struct stat *st)` | 将指定名称的文件信息放入 `*st`                            |
+| `int link(char *file1, char *file2)`    | 为文件 `file1` 创建另一个名称（`file2`）                  |
+| `int unlink(char *file)`                | 删除一个文件                                        |
+
 ---
 
 ## 1. 进程与内存管理
